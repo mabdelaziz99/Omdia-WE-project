@@ -1,0 +1,19 @@
+<% layout ('./layouts/boilerplate') %>
+
+<h1>All Presentations</h1>
+<a href="/presentations/new">Add new Presentation</a>
+<% for (p of presentations) {%>
+    <div class="card mb-3">
+        <div class="row">
+            <div class="col-md-8">
+                <div class="card-body">
+                    <h5 class="card-title"><%= p.title %> </h5>
+                    <p class="card-text"><%= p.description %></p>
+                    <p class="card-text"> <small class="text-muted"><%= p.location %></small> </p>
+                    <a href="/presentations/<%= p.code %>" class="btn btn-primary">View Presentation</a>      
+                </div>
+                      </div>
+          </div>
+        </div>        
+<% } %>
+

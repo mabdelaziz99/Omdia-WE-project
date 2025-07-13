@@ -6,7 +6,7 @@ const {campgroundSchema} = require('./validationSchemas')
 const catchAsync = require('./utils/catchAsync')
 const ExpressError = require('./utils/ExpressError')
 const methodOverride = require('method-override')
-const Campground = require('./models/campground')
+const Campground = require('./models/presentation')
 
 mongoose.connect('mongodb://localhost:27017/omdia',{
 })
@@ -45,43 +45,47 @@ app.get('/', (req,res) =>{
     res.render('home')
 })
 
-app.get('/campgrounds', catchAsync(async (req,res) =>{
-    const campgrounds = await Campground.find({})
-    res.render('campgrounds/index', {campgrounds})
+app.get('/presentations', catchAsync(async (req,res) =>{
+    const presentations = await Campground.find({})
+    res.render('presentations/index', {presentations})
 }))
 
-app.get('/campgrounds/new', catchAsync(async (req,res) =>{
-    res.render('campgrounds/new')
+app.get('/presentations/new', catchAsync(async (req,res) =>{
+    res.render('presentations/new')
 }))
 
-app.post('/campgrounds', validateCampground, catchAsync(async(req,res,next) =>{
+app.post('/presentations', validateCampground, catchAsync(async(req,res,next) =>{
     const newCampground = new Campground(req.body.campground)
     await newCampground.save()
-    res.redirect(`/campgrounds/${newCampground._id}`)
+    res.redirect(`/presentations/${newCampground._id}`)
 }))
 
-app.get('/campgrounds/:id', catchAsync(async (req,res,next) =>{
-        const {id} = req.params
-        const campground = await Campground.findById(id)
-        res.render('campgrounds/show', {campground})
+// app.get('/presentations/:id', catchAsync(async (req,res,next) =>{
+//         const {id} = req.params
+//         const campground = await Campground.findById(id)
+//         res.render('presentations/show', {campground})
+// }))
+
+app.get('/presentations/feb25', catchAsync(async (req,res,next) =>{
+    res.render('presentations/feb25')
 }))
 
-app.get('/campgrounds/:id/edit', catchAsync(async (req,res) =>{
+app.get('/presentations/:id/edit', catchAsync(async (req,res) =>{
     const {id} = req.params
     const campground = await Campground.findById(id)
-    res.render('campgrounds/edit', {campground})
+    res.render('presentations/edit', {campground})
 }))
 
-app.put('/campgrounds/:id', validateCampground, catchAsync(async(req,res) =>{
+app.put('/presentations/:id', validateCampground, catchAsync(async(req,res) =>{
     const {id} = req.params
     const campground = await Campground.findByIdAndUpdate(id, {...req.body.campground})
-    res.redirect(`/campgrounds/${campground._id}`)
+    res.redirect(`/presentations/${campground._id}`)
 }))
 
-app.delete('/campgrounds/:id', catchAsync(async (req,res) => {
+app.delete('/presentations/:id', catchAsync(async (req,res) => {
     const {id} = req.params
     const campground = await Campground.findByIdAndDelete(id)
-    res.redirect('/campgrounds')
+    res.redirect('/presentations')
 }))
 
 app.all(/(.*)/, (req,res,next) => {
