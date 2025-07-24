@@ -1,0 +1,37 @@
+<% layout ('./layouts/boilerplate') %>
+<div class="row">
+    <h1 class="text-center">Add new Article</h1>
+    <div class="col-md-6 offset-3">
+    <form action="/articles" method="POST" class="needsValidation" novalidate>
+        <div class="mb-3">
+            <label class="form-label" for="title">Title</label>
+            <input class="form-control" type="text" id="title" name="article[title]" required>
+                <div class="valid-feedback">Looks good!</div>
+        </div>
+        <div class="mb-3">
+            <label class="form-label" for="code">Code</label>
+            <input class="form-control" type="text" id="code" name="article[code]" required placeholder="example: feb25">
+            <div class="valid-feedback">Looks good!</div>
+        </div>
+        
+        <div class="mb-3">
+            <label class="form-label" for="image">Image Url</label>
+            <input class="form-control" type="text" id="image" name="article[image]" required>
+            <div class="valid-feedback">Looks good!</div>
+        </div>
+        
+        <div class="mb-3">
+            <label class="form-label" for="p1">First Paragrapgh</label>
+            <textarea class="form-control" type="text" id="p1" name="article[p1]" required></textarea>
+            <div class="valid-feedback">Looks good!</div>
+        </div>
+        <button class=" mb-3 btn btn-success">Add Article</button>
+        <a class="mb-3 btn btn-secondary" href="/articles">Cancel</a>
+    </form>
+    <a href="/articles">Go To All Articles</a>
+    </div>
+</div>
+
+
+    
+    

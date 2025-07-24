@@ -1,3 +1,9 @@
 <% layout ('./layouts/boilerplate') %>
-
-<p>Hellllooooo</p>
+<h1><%= p.title %></h1>
+<% for (a of articles) {%>
+    <h3><%= a.title %></h3>
+    <p><%= a.p1 %></p>
+    <% for (i of a.img1URL) {%>
+    <img src="<%= i %>" alt="" style="width: 300px; justify-content: center;">
+    <% } %>
+<% } %>

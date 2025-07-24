@@ -6,7 +6,8 @@ const {campgroundSchema} = require('./validationSchemas')
 const catchAsync = require('./utils/catchAsync')
 const ExpressError = require('./utils/ExpressError')
 const methodOverride = require('method-override')
-const Campground = require('./models/presentation')
+const Presentation = require('./models/presentation')
+const Article = require('./models/article')
 
 mongoose.connect('mongodb://localhost:27017/omdia',{
 })
@@ -27,6 +28,8 @@ app.set('views', path.join(__dirname, 'views'))
 app.use(express.urlencoded({extended: true}))
 app.use(methodOverride('_method'))
 app.use(express.static(path.join(__dirname, 'public')));
+app.use('/imgs', express.static('imgs'));
+
 
 
 const validateCampground = (req,res,next) => {
@@ -46,9 +49,60 @@ app.get('/', (req,res) =>{
 })
 
 app.get('/presentations', catchAsync(async (req,res) =>{
-    const presentations = await Campground.find({})
+    const presentations = await Presentation.find({})
     res.render('presentations/index', {presentations})
 }))
+
+app.get('/articles', async (req, res) => {
+    const { domains = [], tags = [], page = 1 } = req.query;
+
+    const filter = {};
+
+    // Convert to arrays (if only one is selected, Express treats it as a string)
+    const domainArray = Array.isArray(domains) ? domains : [domains];
+    const tagsArray = Array.isArray(tags) ? tags : [tags];
+
+    if (domainArray[0]) {
+        filter.domains = { $in: domainArray };
+    }
+
+    if (tagsArray[0]) {
+        filter.tags = { $in: tagsArray };
+    }
+
+    const limit = 9;
+    const skip = (page - 1) * limit;
+
+    const articles = await Article.find(filter).skip(skip).limit(limit);
+    const totalArticles = await Article.countDocuments(filter);
+    const totalPages = Math.ceil(totalArticles / limit);
+
+    const allTags = ['RAN', 'vRAN', 'OpenRAN','AI-RAN', 'AI', '5G', '6G','Automation', 'Market Share', 'Cloud', 'Customer Experience', 'Digital Transformation', 'Fiber', 'cRAN','Microwave', 'Energy Efficiency', 'Recycling & Reuse', 'Green Energy', 'Digital Inclusion', 'Conservation', 'Green Bonds', 'Carbon Credits'];
+
+    const allDomains = ['Wireless Access', 'Fixed Access', 'Transmission', 'Core', 'Sustainability'];
+
+    res.render('articles/index', {
+        articles,
+        currentPage: parseInt(page),
+        totalPages,
+        selectedTags: tagsArray,
+        selectedDomains: domainArray,
+        allTags,
+        allDomains
+    });
+});
+
+
+app.get('/articles/new', catchAsync(async (req,res) =>{
+    res.render('articles/new')
+}))
+
+app.get('/articles/:id', catchAsync(async (req,res,next) =>{
+        const {id} = req.params
+        const article = await Article.findById(id)
+        res.render('articles/show', {article})
+}))
+
 
 app.get('/presentations/new', catchAsync(async (req,res) =>{
     res.render('presentations/new')
@@ -66,8 +120,14 @@ app.post('/presentations', validateCampground, catchAsync(async(req,res,next) =>
 //         res.render('presentations/show', {campground})
 // }))
 
-app.get('/presentations/feb25', catchAsync(async (req,res,next) =>{
-    res.render('presentations/feb25')
+//Change the p.code in line 74 to a dynamic ejs page in the future when
+//you replace static htmls with the ejs pages like the yelp project was
+app.get('/presentations/:code', catchAsync(async (req,res,next) =>{
+    const {code} = req.params
+    const p = await Presentation.findOne({code:`${code}`})
+    const articles = await Article.find({code: `${code}`})
+    console.log(articles)
+    res.render(`presentations/${p.code}`, {p, articles})
 }))
 
 app.get('/presentations/:id/edit', catchAsync(async (req,res) =>{
