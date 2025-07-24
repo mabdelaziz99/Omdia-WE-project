@@ -1,2 +1,2 @@
 # Omdia-WE-project
- A website for Telecom Egypt's monthly Omdia review
+ Telecom Egypt's Omdia portal
