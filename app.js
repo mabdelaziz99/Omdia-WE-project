@@ -114,21 +114,22 @@ app.post('/presentations', validateCampground, catchAsync(async(req,res,next) =>
     res.redirect(`/presentations/${newCampground._id}`)
 }))
 
-// app.get('/presentations/:id', catchAsync(async (req,res,next) =>{
-//         const {id} = req.params
-//         const campground = await Campground.findById(id)
-//         res.render('presentations/show', {campground})
-// }))
+app.get('/presentations/:id', catchAsync(async (req,res,next) =>{
+        const {id} = req.params
+        const presentation = await Presentation.findById(id)
+        const articles = await Article.find({code:`${presentation.code}`})
+        res.render('presentations/show', {presentation, articles})
+}))
 
 //Change the p.code in line 74 to a dynamic ejs page in the future when
 //you replace static htmls with the ejs pages like the yelp project was
-app.get('/presentations/:code', catchAsync(async (req,res,next) =>{
-    const {code} = req.params
-    const p = await Presentation.findOne({code:`${code}`})
-    const articles = await Article.find({code: `${code}`})
-    console.log(articles)
-    res.render(`presentations/${p.code}`, {p, articles})
-}))
+// app.get('/presentations/:code', catchAsync(async (req,res,next) =>{
+//     const {code} = req.params
+//     const p = await Presentation.findOne({code:`${code}`})
+//     const articles = await Article.find({code: `${code}`})
+//     console.log(articles)
+//     res.render(`presentations/${p.code}`, {p, articles})
+// }))
 
 app.get('/presentations/:id/edit', catchAsync(async (req,res) =>{
     const {id} = req.params
