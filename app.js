@@ -54,22 +54,35 @@ app.get('/presentations', catchAsync(async (req,res) =>{
 }))
 
 app.get('/articles', async (req, res) => {
-    const { domains = [], tags = [], page = 1 } = req.query;
+    const { domains = [], tags = [], page = 1, search = '' } = req.query;
+
+    // Normalize arrays
+    const domainArray = Array.isArray(domains) ? domains : [domains].filter(Boolean);
+    const tagsArray = Array.isArray(tags) ? tags : [tags].filter(Boolean);
 
     const filter = {};
 
-    // Convert to arrays (if only one is selected, Express treats it as a string)
-    const domainArray = Array.isArray(domains) ? domains : [domains];
-    const tagsArray = Array.isArray(tags) ? tags : [tags];
-
-    if (domainArray[0]) {
-        filter.domains = { $in: domainArray };
+    if (domainArray.length > 0) filter.domains = { $in: domainArray };
+    if (tagsArray.length > 0) filter.tags = { $in: tagsArray };
+    if (search) {
+  const wordBoundaryRegex = new RegExp(`\\b${search}\\b`, 'i');
+  filter.$or = [
+    { title: wordBoundaryRegex },
+    { p1: wordBoundaryRegex },
+    { p2: wordBoundaryRegex }, // add more if needed
+    { p3: wordBoundaryRegex }
+    ];
     }
 
-    if (tagsArray[0]) {
-        filter.tags = { $in: tagsArray };
+    // Tags checkbox filter
+    if (tags && tags.length > 0) {
+    filter.tags = { $in: tagsArray };
     }
 
+    // Domains checkbox filter
+    if (domains && domains.length > 0) {
+    filter.domains = { $in: domainArray };
+    }
     const limit = 9;
     const skip = (page - 1) * limit;
 
@@ -78,7 +91,6 @@ app.get('/articles', async (req, res) => {
     const totalPages = Math.ceil(totalArticles / limit);
 
     const allTags = ['RAN', 'vRAN', 'OpenRAN','AI-RAN', 'AI', '5G', '6G','Automation', 'Market Share', 'Cloud', 'Customer Experience', 'Digital Transformation', 'Fiber', 'cRAN','Microwave', 'Energy Efficiency', 'Recycling & Reuse', 'Green Energy', 'Digital Inclusion', 'Conservation', 'Green Bonds', 'Carbon Credits'];
-
     const allDomains = ['Wireless Access', 'Fixed Access', 'Transmission', 'Core', 'Sustainability'];
 
     res.render('articles/index', {
@@ -88,9 +100,12 @@ app.get('/articles', async (req, res) => {
         selectedTags: tagsArray,
         selectedDomains: domainArray,
         allTags,
-        allDomains
+        allDomains,
+        query: req.query,
+        search
     });
 });
+
 
 
 app.get('/articles/new', catchAsync(async (req,res) =>{
@@ -100,7 +115,8 @@ app.get('/articles/new', catchAsync(async (req,res) =>{
 app.get('/articles/:id', catchAsync(async (req,res,next) =>{
         const {id} = req.params
         const article = await Article.findById(id)
-        res.render('articles/show', {article})
+        const presentation = await Presentation.findOne({code:`${article.code}`})
+        res.render('articles/show', {article, presentation})
 }))
 
 
