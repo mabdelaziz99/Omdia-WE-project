@@ -1,9 +1,25 @@
 <% layout ('./layouts/boilerplate') %>
-<h1><%= presentation.title %> Omdia Review</h1>
-<% for (a of articles) {%>
-    <h3><%= a.title %></h3>
-    <p><%= a.p1 %></p>
-    <% for (i of a.img1URL) {%>
-    <img src="<%= i %>" alt="" style="width: 300px; align-self: center; margin: 20px;">
-    <% } %>
+<h1><%= presentation.title %> </h1>
+<% for (article of articles) {%>
+    <p><%= article.p1 %></p>
+    <div class="container">
+        <div class="d-flex justify-content-center ">
+        <% for (let i of article.img1URL) {%>
+            <div class="col-auto">
+                <img src="<%= i %>" alt="" class="img-fluid rounded" style="max-height: 300px; margin: 20px; object-fit: contain;">
+            </div>
+        <% } %>
+        </div>
+     </div>
+
+     <p><%= article.p2 %></p>
+    <div class="container">
+        <div class="d-flex justify-content-center ">
+        <% for (let i of article.img2URL) {%>
+            <div class="col-auto">
+                <img src="<%= i %>" alt="" class="img-fluid rounded" style="max-height: 300px; margin: 20px; object-fit: contain;">
+            </div>
+        <% } %>
+        </div>
+     </div>
 <% } %>

@@ -3,7 +3,7 @@ const Schema = mongoose.Schema
 
 const PresentationSchema = new Schema ({
     title: String,
-    code: String,
+    month: String,
     tags: [String]
 })
 

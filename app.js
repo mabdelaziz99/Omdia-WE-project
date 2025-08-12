@@ -115,7 +115,7 @@ app.get('/articles/new', catchAsync(async (req,res) =>{
 app.get('/articles/:id', catchAsync(async (req,res,next) =>{
         const {id} = req.params
         const article = await Article.findById(id)
-        const presentation = await Presentation.findOne({code:`${article.code}`})
+        const presentation = await Presentation.findOne({month:`${article.month}`})
         res.render('articles/show', {article, presentation})
 }))
 
@@ -133,7 +133,7 @@ app.post('/presentations', validateCampground, catchAsync(async(req,res,next) =>
 app.get('/presentations/:id', catchAsync(async (req,res,next) =>{
         const {id} = req.params
         const presentation = await Presentation.findById(id)
-        const articles = await Article.find({code:`${presentation.code}`})
+        const articles = await Article.find({month:`${presentation.month}`})
         res.render('presentations/show', {presentation, articles})
 }))
 

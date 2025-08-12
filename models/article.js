@@ -4,14 +4,14 @@ const Schema = mongoose.Schema
 
 const ArticleSchema = new Schema ({
     title: String,
-    code: {
+    month: {
         type: String,
-        lowercase: true
     },
     tags: [{
         type: String,
         enum: ['RAN', 'vRAN', 'OpenRAN','AI-RAN', 'AI', '5G', '6G','Automation', 'Market Share', 'Cloud', 'Customer Experience', 'Digital Transformation', 'Fiber', 'cRAN','Microwave', 'Energy Efficiency', 'Recycling & Reuse', 'Green Energy', 'Digital Inclusion', 'Conservation', 'Green Bonds', 'Carbon Credits']
     }],
+    summary: String,
     p1: String,
     domains: [{
         type: String,

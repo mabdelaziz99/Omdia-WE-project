@@ -1,7 +1,7 @@
 <% layout ('./layouts/boilerplate') %>
 
 
-    <div class="card mb-4 shadow-sm">
+    <div class="card mb-4 shadow-sm border-0">
         <div class="card-body">
             <h2 class="card-title">
                 <a href="/articles/<%= article._id %>" class="text-decoration-none text-dark">
@@ -10,26 +10,22 @@
             </h2>
 
             <div class="mb-2">
-            Tags:<% article.tags.forEach(tag => { %>
+            Topics:<% article.tags.forEach(tag => { %>
                 <a href="/articles?tags=<%= tag %>" class="badge bg-primary text-decoration-none me-1">
                 #<%= tag %>
                 </a>
             <% }) %>
-            </div>
-
-
-            <div class="mb-2">
+        
+            | 
             Domain: <% article.domains.forEach(domain => { %>
-                <a href="/articles?domains=<%= domain %>" class="badge bg-secondary text-decoration-none me-1">
+                <a href="/articles?domains=<%= domain %>" class="badge bg-success text-decoration-none me-1">
                 <%= domain %>
                 </a>
             <% }) %>
-            </div>
-
-            <div class="mb-2">
-            Presentation: 
-                <a href="/presentations/<%= presentation._id %>" class="badge bg-success text-decoration-none me-1">
-                <%= presentation.title %>
+            | 
+            Date: 
+                <a href="/presentations/<%= presentation._id %>" class="badge bg-secondary text-decoration-none me-1">
+                <%= presentation.month %>
                 </a>
             </div>
 
@@ -40,6 +36,17 @@
     <div class="container">
         <div class="d-flex justify-content-center ">
         <% for (let i of article.img1URL) {%>
+            <div class="col-auto">
+                <img src="<%= i %>" alt="" class="img-fluid rounded" style="max-height: 300px; margin: 20px; object-fit: contain;">
+            </div>
+        <% } %>
+        </div>
+     </div>
+
+     <p><%= article.p2 %></p>
+    <div class="container">
+        <div class="d-flex justify-content-center ">
+        <% for (let i of article.img2URL) {%>
             <div class="col-auto">
                 <img src="<%= i %>" alt="" class="img-fluid rounded" style="max-height: 300px; margin: 20px; object-fit: contain;">
             </div>

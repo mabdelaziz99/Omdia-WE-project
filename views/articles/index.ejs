@@ -6,29 +6,29 @@
   <div class="row">
 
     <!-- Sidebar Filter -->
-    <div class="col-md-3">
+    <div class="col-md-4">
       <form method="GET" action="/articles" class="border rounded p-3 bg-light">
         
-                  <!-- Search Bar -->
+        <!-- Search Bar -->
         <div class="mb-3">
-          <label for="search" class="form-label fw-bold">Search by Title</label>
+          <!-- <label for="search" class="form-label fw-bold">Search by Title</label> -->
           <input 
             type="text" 
             class="form-control" 
             name="search" 
             id="search" 
-            placeholder="Enter keywords..." 
+            placeholder="Search using keywords" 
             value="<%= search %>">
         </div>
 
         <div class="d-grid gap-2">
-          <button type="submit" class="btn btn-primary">Apply Filters</button>
-          <a href="/articles" class="btn btn-secondary">Reset Filters</a>
+          <button type="submit" class="btn btn-primary w-50">Apply Filters</button>
+          <a href="/articles" class="btn btn-secondary w-50">Reset Filters</a>
         </div>
+        <hr>
         <!-- Domains -->
-        <div class="mb-3">
+        <!-- <div class="mb-3">
           <label class="form-label fw-bold">Domains</label>
-          <% allDomains %>
           <% allDomains.forEach(domain => { %>
             <div class="form-check">
               <input class="form-check-input" type="checkbox" name="domains" value="<%= domain %>" 
@@ -38,9 +38,72 @@
               </label>
             </div>
           <% }) %>
+        </div> -->
+
+
+        <!-- Domains -->
+        <!-- <div class="dropdown mb-3 my-2">
+          <button class="btn btn-outline-success dropdown-toggle w-50" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+            Domains
+          </button>
+          <ul class="dropdown-menu w-75" aria-labelledby="dropdownMenuButton">
+            <li>
+              <% allDomains.forEach(domain => { %>
+              <div class="form-check">
+                <input class="form-check-input mx-1" type="checkbox" name="domains" value="<%= domain %>" 
+                  <%= selectedDomains.includes(domain) ? 'checked' : '' %> id="domain-<%= domain %>">
+                <label class="form-check-label" for="domain-<%= domain %>">
+                  <%= domain.charAt(0).toUpperCase() + domain.slice(1) %>
+                </label>
+              </div>
+            </li>
+            <% }) %>
+          </ul>
+        </div> -->
+
+      <div class="dropdown mb-3 my-2">
+        <button class="btn btn-outline-success dropdown-toggle w-50" type="button" 
+                data-bs-toggle="collapse" data-bs-target="#domainList" aria-expanded="false">
+          Domains
+        </button>
+
+        <div id="domainList" class="collapse show w-75 mt-2">
+          <% allDomains.forEach(domain => { %>
+            <div class="form-check">
+              <input class="form-check-input mx-1" type="checkbox" name="domains" value="<%= domain %>" 
+                <%= selectedDomains.includes(domain) ? 'checked' : '' %> id="domain-<%= domain %>">
+              <label class="form-check-label" for="domain-<%= domain %>">
+                <%= domain.charAt(0).toUpperCase() + domain.slice(1) %>
+              </label>
+            </div>
+          <% }) %>
+        </div>
+      </div>
+
+
+        <hr>
+        <!-- Tags -->
+        <div class="dropdown mb-3 my-2">
+          <button class="btn btn-outline-success dropdown-toggle w-50" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+            Topics
+          </button>
+          <ul class="dropdown-menu w-100" aria-labelledby="dropdownMenuButton">
+            <li>
+              <% allTags.forEach(tag => { %>
+              <div class="form-check">
+                <input class="form-check-input mx-1" type="checkbox" name="tags" value="<%= tag %>" 
+                  <%= selectedTags.includes(tag) ? 'checked' : '' %> id="tag-<%= tag %>">
+                <label class="form-check-label" for="tag-<%= tag %>">
+                  <%= tag.charAt(0).toUpperCase() + tag.slice(1) %>
+                </label>
+              </div>
+            </li>
+            <% }) %>
+          </ul>
         </div>
 
-        <!-- Tags -->
+
+        <!-- Tags
         <div class="mb-3">
           <label class="form-label fw-bold">Tags</label>
           <% allTags.forEach(tag => { %>
@@ -52,28 +115,28 @@
               </label>
             </div>
           <% }) %>
-        </div>
+        </div>-->
 
        
       </form>
-    </div>
+
+    </div> 
 
     <!-- Articles Section -->
-    <div class="col-md-9">
+    <div class="col-md-8">
       <% if (articles.length === 0) { %>
         <div class="alert alert-warning">No articles found.</div>
       <% } else { %>
-        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
           <% articles.forEach(article => { %>
-            <div class="col">
             <a href="articles/<%= article._id %>" class="text-decoration-none text-dark article-link" >
-              <div class="card h-100">
-                <% if (article.img1URL.length > 0) { %>
+            <div class="col">
+              <div class="card h-100 border-0">
+                <!-- <% if (article.img1URL.length > 0) { %>
                   <img src="<%= article.img1URL[0] %>" class="card-img-top d-block mx-auto" alt="Image" style="height: auto; max-width: 200px;">
-                <% } %>
+                <% } %> -->
                 <div class="card-body">
                   <h5 class="card-title"><%= article.title %></h5>
-                  <p><strong>Domains:</strong>
+                  <p>Domains
                     <% if (article.domains && article.domains.length > 0) { %>
                             <% article.domains.forEach((domain) => { %>
                             <a href="/articles?domains=<%= domain %>" class="badge bg-success text-decoration-none me-1">
@@ -83,9 +146,9 @@
                                 <% } else { %>
                                     None
                                 <% } %>
-                </p>
-
-                  <p><strong>Tags:</strong>
+                
+                  | 
+                  Topics
                     <% if (article.tags && article.tags.length > 0) { %>
                     <% article.tags.forEach((tag, index) => { %>
                     <a href="/articles?tags=<%= tag %>" class="badge bg-primary text-decoration-none me-1">
@@ -95,14 +158,26 @@
                 <% } else { %>
                  None
                 <% } %>
-                </p>
 
+                |
+                    <% if (article.month) { %>
+                    <a href="/articles?month=<%= article.month %>" class="badge bg-secondary text-decoration-none me-1">
+                    <%= article.month %>
+                    </a>
+                <% } else { %>
+                 None
+                <% } %>
+                </p>
+                <p>
+                  <%= article.summary %>
+                </p>
                 </div>
               </div>
+              <hr>
             </div></a>
           <% }) %>
-        </div>
       <% } %>
+      
         </div>
 
       <!-- Pagination -->
