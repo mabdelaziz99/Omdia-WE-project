@@ -1,2 +1,2 @@
-# Omdia-WE-project
- Telecom Egypt's Omdia portal
+# TE-Technology-Update
+ Telecom Egypt's Technology Update
